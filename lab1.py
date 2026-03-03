@@ -117,6 +117,9 @@ class ElectricVehicle:
         return self.fuel_type
 
 
+(((())))
+
+
 class GasolineVehicle:
     fuel_type: str
 
@@ -339,9 +342,11 @@ class Rectangle:
 
 
 class PaymentProcessor(ABC):
+    @abstractmethod
     def authorize_payment(self, amount: float) -> None:
         pass
 
+    @abstractmethod
     def capture_payment(self, amount: float) -> None:
         pass
 
@@ -367,14 +372,98 @@ class PayPalPayment(PaymentProcessor):
     def capture_payment(self, amount: float) -> str:
         return f"located operation w/ email {self.email}"
 
+
 # ========================================== ZAD 18 ==========================================
 # Utworzyć klasę abstrakcyjną Vehicle z metodą max_speed(), a następnie stworzyć
 # klasy Car i Bicycle, definiującą ich maksymalną prędkość.
+
+class Vehicle(ABC):
+    @abstractmethod
+    def max_speed(self, speed: int) -> int:
+        pass
+
+
+class Car(Vehicle):
+    def __init__(self, model: str) -> None:
+        self.model = model
+
+    def max_speed(self, speed: int) -> str:
+        return f"{self.model} have top speed of {speed}"
+
+
+class Bicycle:
+    def __init__(self, model: str) -> None:
+        self.model = model
+
+    def max_speed(self, speed: int) -> str:
+        return f"{self.model} have top speed of {speed}"
+
 
 # ========================================== ZAD 19 ==========================================
 # Przygotować klasę abstrakcyjną DatabaseConnection z metodami connect() i execute_query().
 # Utworzyć klasy MySQLConnection oraz PostgreSQLConnection, implementujące te metody na różne sposoby.
 
+class DatabaseConnection(ABC):
+    @abstractmethod
+    def connect(self, server_name: str) -> str:
+        pass
+
+    @abstractmethod
+    def execure_query(self, query: str) -> str:
+        pass
+
+
+class MySQLConnection(DatabaseConnection):
+    def __init__(self, port_number: int) -> None:
+        self.port_number = port_number
+
+    def connect(self, server_name: str) -> str:
+        return f'connected to server {server_name} trough port {self.port_number}'
+
+    def execure_query(self, query: str) -> str:
+        return f'executing query: {query}'
+
+
+class PostgreSQLConnection(DatabaseConnection):
+    def __init__(self, port_number: int) -> None:
+        self.port_number = port_number
+
+    def connect(self, server_name: str) -> str:
+        return f'connected to PostGreSQL {server_name} trough port {self.port_number}'
+
+    def execure_query(self, query: str) -> str:
+        return f'executing query: {query}'
+
+
 # ========================================== ZAD 20 ==========================================
 # Utworzyć klasę abstrakcyjną Instrument z metodą play(), a następnie zaimplementować klasy
 # Piano i Guitar, które będą miały różne wersje tej metody.
+
+class Instrument(ABC):
+    @abstractmethod
+    def play(self) -> None:
+        pass
+
+
+class Piano(Instrument):
+    def __init__(self, instrument_type: str) -> str:
+        self.instrument_type = instrument_type
+
+    def play(self) -> str:
+        return f"{self.instrument_type} is playing"
+
+
+class Guitar(Instrument):
+    def __init__(self, instrument_type: str) -> str:
+        self.instrument_type = instrument_type
+
+    def play(self) -> str:
+        return f"{self.instrument_type} is playing"
+
+
+if __name__ == '__main__':
+    obj = Piano("piano")
+    print(obj.play())
+    obj1 = Guitar('guitar')
+    print(obj1.play())
+   
