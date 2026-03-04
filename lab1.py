@@ -117,9 +117,6 @@ class ElectricVehicle:
         return self.fuel_type
 
 
-(((())))
-
-
 class GasolineVehicle:
     fuel_type: str
 
@@ -459,11 +456,3 @@ class Guitar(Instrument):
 
     def play(self) -> str:
         return f"{self.instrument_type} is playing"
-
-
-if __name__ == '__main__':
-    obj = Piano("piano")
-    print(obj.play())
-    obj1 = Guitar('guitar')
-    print(obj1.play())
-   
