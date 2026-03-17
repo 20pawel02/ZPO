@@ -46,6 +46,14 @@ class PizzaDiavola(Pizza):
 # C. Przygotować klasę Computer, która posiada wiele parametrów przekazywanych w inicjalizatorze.
 # Przerobić nastęopnie kod tak, aby zamiast dużego konstruktora użyć wzorca budowniczego
 
+class Computer:
+    def __init__(self) -> None:
+        self.cpu = ""
+        self.gpu = ""
+        self.psu = ""
+        self.ram = ""
+        self.storage = 0
+
 class BuilderComputer(ABC):
     @abstractmethod
     def build_cpu(self) -> None:
@@ -55,6 +63,22 @@ class BuilderComputer(ABC):
     def build_gpu(self) -> None:
         pass
 
+    @abstractmethod
+    def build_psu(self) -> None:
+        pass
+
+    @abstractmethod
+    def build_ram(self) -> None:
+        pass
+
+    @abstractmethod
+    def build_storage(self) -> None:
+        pass
+
+    def get_computer(self) -> Computer:
+        return self.computer
+
+class 
 
 
 
