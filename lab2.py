@@ -24,6 +24,7 @@ class Pizza(ABC):
     def show_skladniki(self) -> str:
         pass
 
+
 # Builder
 class SredniaHawajskaDlaKazdego(Pizza):  # sponsorowana przez admirala Hajasia -- Glak Pizza
 
@@ -33,19 +34,20 @@ class SredniaHawajskaDlaKazdego(Pizza):  # sponsorowana przez admirala Hajasia -
     def show_skladniki(self) -> str:
         return f"{', '.join(self.skladniki)}"
 
+
 # Builder
 class PizzaDiavola(Pizza):
     def add_skladnik(self, skladnik: str) -> None:
         self.skladniki.append(skladnik)
-    
+
     def show_skladniki(self) -> str:
         return f"{', '.join(self.skladniki)}"
-
 
 
 # C. Przygotować klasę Computer, która posiada wiele parametrów przekazywanych w inicjalizatorze.
 # Przerobić nastęopnie kod tak, aby zamiast dużego konstruktora użyć wzorca budowniczego
 from abc import ABC, abstractmethod
+
 
 class Computer:
     def __init__(self) -> None:
@@ -58,10 +60,11 @@ class Computer:
     def __str__(self) -> str:
         return f"Computer [CPU: {self.cpu}, GPU: {self.gpu}, PSU: {self.psu}, RAM: {self.ram}, Storage: {self.storage}]"
 
+
 class BuilderComputer(ABC):
     def __init__(self):
-        self._computer = Computer() 
-    
+        self._computer = Computer()
+
     @abstractmethod
     def build_cpu(self) -> None: pass
 
@@ -109,6 +112,7 @@ class MyComputer_BuilderComputer(BuilderComputer):
     def build_storage(self) -> None:
         self._computer.storage = "1TB hdd, 500GB NVMe"
 
+
 class OfficeComputer_BuilderComputer(BuilderComputer):
     def __init__(self):
         self.reset()
@@ -121,7 +125,7 @@ class OfficeComputer_BuilderComputer(BuilderComputer):
         build_computer = self._computer
         self.reset()
         return build_computer
-    
+
     def build_cpu(self) -> None:
         self._computer.cpu = "Intel Core i3"
 
@@ -161,49 +165,3 @@ class Director:
             self._builder = MyComputer_BuilderComputer()
         else:
             self._builder = OfficeComputer_BuilderComputer()
-
-
-if __name__ == '__main__':
-    heavy_workload = {"gpu_intensive": True, "budget": 15000}
-    light_workload = {"gpu_intensive": False, "budget": 3000}
-
-    director = Director()
-
-    director.set_requirements(heavy_workload)
-    gaming_pc = director.build_computer()
-    print("Gaming PC:")
-    print(gaming_pc)
-
-    print("\n")
-
-    director.set_requirements(light_workload)
-    office_pc = director.build_computer()
-    print("Office PC:")
-    print(office_pc)
-
-
-
-
-# ================================ METODA WYTWÓRCZA ================================
-"""
-A. Utworzyć interfejs Document i klasy: WordDocument, PDFDocument, a następnie przygotować metodę wytwórczą, 
-która decyduje, jaki dokument utworzyć na podstawie zadanego rozszerzenia pliku.
-
-B. Utworzyć klasę AnimalFactory, która na podstawie podanego parametru (np. "dog", "cat")
-zwraca obiekt odpowiedniej klasy (Dog, Cat).
-
-C. Rozbuduj przygotowane implementacje Metody Wytwórczej, tak aby mogły obsługiwać dynamiczne 
-rejestrowanie nowych klas zamiast statycznych instrukcji warunkowych.
-"""
-
-
-
-class WordDocument(ABC):
-    
-    pass
-
-
-
-
-class PDFDocument:
-    pass
