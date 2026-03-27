@@ -14,14 +14,15 @@ i je modyfikować niezależnie od oryginału.
 from copy import deepcopy
 from typing import Any
 
+
 class Character:
     def __init__(
-        self,
-        clas: str,
-        weapon: str,
-        armor: str,
-        **kwargs: dict
-    )-> None:
+            self,
+            clas: str,
+            weapon: str,
+            armor: str,
+            **kwargs: dict
+    ) -> None:
         self.clas = clas
         self.weapon = weapon
         self.armor = armor
@@ -37,10 +38,37 @@ class Character:
 
         return "".join(summary)
 
+
 class CharacterPrototype:
     def __init__(self) -> None:
         self.objects = dict()
 
     def add_prototype(self, id_: int, obj: Any):
-        self.objects[id_]
+        self.objects[id_] = obj
 
+    def del_prototype(self, id_: int):
+        del self.objects[id_]
+
+    def clone_prototype(self, id_: int, **kwargs: dict) -> Any:
+        if id_ in self.objects:
+            instance = deepcopy(self.objects[id_])
+
+            for key in kwargs:
+                setattr(instance, key, kwargs[key])
+            return instance
+        else:
+            raise ModuleNotFoundError("ID not found")
+
+
+if __name__ == '__main__':
+    mage = Character(
+        clas="mage",
+        weapon="staff",
+        armor="light"
+    )
+
+    warrior = Character(
+        clas="warrior",
+        weapon="sword",
+        armor="heavy"
+    )
