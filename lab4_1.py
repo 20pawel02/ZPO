@@ -14,10 +14,12 @@ bazie danych, bez modyfikacji oryginalnych metod.
 
 from abc import ABC, abstractmethod
 
+
 class User(ABC):
     @abstractmethod
     def get_permissions(self) -> list[str]:
         pass
+
 
 class BasicUser(User):
     def __init__(self, username: str) -> None:
@@ -26,6 +28,7 @@ class BasicUser(User):
     def get_permissions(self) -> list[str]:
         return ["read_public_content"]
 
+
 class UserDecorator(User):
     def __init__(self, user: User) -> None:
         self._user = user
@@ -33,15 +36,18 @@ class UserDecorator(User):
     def get_permissions(self) -> list[str]:
         return self._user.get_permissions()
 
+
 class AdminRole(UserDecorator):
     def get_permissions(self) -> list[str]:
         base_perms = super().get_permissions()
         return base_perms + ["delete_users", "manage_system"]
 
+
 class ModeratorRole(UserDecorator):
     def get_permissions(self) -> list[str]:
         base_perms = super().get_permissions()
         return base_perms + ["edit_posts", "ban_users"]
+
 
 class GuestRole(UserDecorator):
     def get_permissions(self) -> list[str]:
@@ -49,12 +55,11 @@ class GuestRole(UserDecorator):
         return base_perms + ["read_limited_content"]
 
 
-
 # ============================================== 2 ==============================================
 
 
-
 from functools import wraps
+
 
 def validate_form(func):
     @wraps(func)
@@ -66,9 +71,11 @@ def validate_form(func):
             raise ValueError("bad email")
         if len(password) < 8:
             raise ValueError("bad password")
-        
+
         return func(*args, **kwargs)
+
     return wrapper
+
 
 @validate_form
 def process_registration(email: str, password: str) -> str:
@@ -79,19 +86,22 @@ def process_registration(email: str, password: str) -> str:
 
 import time
 
+
 def log_execution_time(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         start_time = time.perf_counter()
-        
+
         result = func(*args, **kwargs)
-        
+
         end_time = time.perf_counter()
         execution_time = end_time - start_time
-        
+
         print(f"[LOG DB] Transakcja '{func.__name__}' wykonana w {execution_time:.4f} sekundy.")
         return result
+
     return wrapper
+
 
 class Database:
     @log_execution_time
@@ -105,8 +115,6 @@ class Database:
         return True
 
 
-
-
 if __name__ == "__main__":
     print("zad1\n")
     my_user = BasicUser("JanKowalski")
@@ -117,7 +125,6 @@ if __name__ == "__main__":
 
     super_user = AdminRole(mod_user)
     print(f"SuperAdmin: {super_user.get_permissions()}\n")
-
 
     print("zad2\n")
     try:
@@ -133,6 +140,6 @@ if __name__ == "__main__":
 
     print("zad3\n")
     db = Database()
-    
+
     users = db.fetch_users()
     db.commit_transaction()

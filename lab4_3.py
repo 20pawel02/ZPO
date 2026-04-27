@@ -5,14 +5,15 @@
 3. Stworzyć system umożliwiający kompozycję raportów finansowych, gdzie sekcje raportu mogą zawierać zarówno pojedyncze wartości, jak i inne sekcje.
 """
 
-
 # =================================================== 1 ==================================================
 from abc import ABC, abstractmethod
+
 
 class FileSystemComponent(ABC):
     @abstractmethod
     def get_size(self) -> int:
         pass
+
 
 class File(FileSystemComponent):
     def __init__(self, name: str, size: int) -> None:
@@ -21,6 +22,7 @@ class File(FileSystemComponent):
 
     def get_size(self) -> int:
         return self.size
+
 
 class Directory(FileSystemComponent):
     def __init__(self, name: str) -> None:
@@ -37,13 +39,13 @@ class Directory(FileSystemComponent):
         return sum(child.get_size() for child in self.children)
 
 
-
 # =================================================== 2 ==================================================
 
 class AuthComponent(ABC):
     @abstractmethod
     def get_permissions(self) -> set[str]:
         pass
+
 
 class User(AuthComponent):
     def __init__(self, name: str) -> None:
@@ -55,6 +57,7 @@ class User(AuthComponent):
 
     def get_permissions(self) -> set[str]:
         return self.permissions
+
 
 class Group(AuthComponent):
     def __init__(self, name: str) -> None:
@@ -77,12 +80,14 @@ class Group(AuthComponent):
             total_permissions.update(member.get_permissions())
         return total_permissions
 
+
 # =================================================== 3 ==================================================
 
 class ReportComponent(ABC):
     @abstractmethod
     def get_total(self) -> float:
         pass
+
 
 class ReportValue(ReportComponent):
     def __init__(self, name: str, value: float) -> None:
@@ -91,6 +96,7 @@ class ReportValue(ReportComponent):
 
     def get_total(self) -> float:
         return self.value
+
 
 class ReportSection(ReportComponent):
     def __init__(self, name: str) -> None:
@@ -107,18 +113,17 @@ class ReportSection(ReportComponent):
         return sum(child.get_total() for child in self.children)
 
 
-
 if __name__ == "__main__":
     # Test Zadanie 1
     root_dir = Directory("root")
     docs_dir = Directory("docs")
     file1 = File("resume.pdf", 1024)
     file2 = File("photo.jpg", 2048)
-    
+
     docs_dir.add(file1)
     root_dir.add(docs_dir)
     root_dir.add(file2)
-    
+
     total_size = root_dir.get_size()
 
     # Test Zadanie 2
@@ -130,11 +135,11 @@ if __name__ == "__main__":
     admin_group.assign_permission("ALL_ACCESS")
     editor_group.assign_permission("EDIT_POSTS")
     user1.assign_permission("READ_POSTS")
-    
+
     editor_group.add(user1)
     admin_group.add(editor_group)
     admin_group.add(user2)
-    
+
     all_admin_perms = admin_group.get_permissions()
 
     # Test Zadanie 3
@@ -142,8 +147,8 @@ if __name__ == "__main__":
     q1_section = ReportSection("Q1")
     q1_section.add(ReportValue("January Revenue", 15000.50))
     q1_section.add(ReportValue("February Revenue", 18200.00))
-    
+
     annual_report.add(q1_section)
     annual_report.add(ReportValue("Yearly Bonus", -5000.00))
-    
+
     total_revenue = annual_report.get_total()
