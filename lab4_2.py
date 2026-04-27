@@ -60,17 +60,23 @@ class GraphicsFacade:
 
 
 class ConnectionManager:
-    def connect(self, url: str) -> None: pass
-    def disconnect(self) -> None: pass
+    def connect(self, url: str) -> None: 
+        pass
+
+    def disconnect(self) -> None: 
+        pass
 
 class ChannelManager:
-    def create_channel(self) -> None: pass
+    def create_channel(self) -> None: 
+        pass
 
 class QueueManager:
-    def declare(self, queue_name: str) -> None: pass
+    def declare(self, queue_name: str) -> None: 
+        pass
 
 class Publisher:
-    def publish(self, queue_name: str, message: str) -> None: pass
+    def publish(self, queue_name: str, message: str) -> None: 
+        pass
 
 class Consumer:
     def consume(self, queue_name: str) -> str:

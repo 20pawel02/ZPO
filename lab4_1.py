@@ -35,7 +35,6 @@ class UserDecorator(User):
 
 class AdminRole(UserDecorator):
     def get_permissions(self) -> list[str]:
-        # Pobieramy uprawnienia z warstwy niżej i dodajemy własne
         base_perms = super().get_permissions()
         return base_perms + ["delete_users", "manage_system"]
 
@@ -90,7 +89,6 @@ def log_execution_time(func):
         end_time = time.perf_counter()
         execution_time = end_time - start_time
         
-        # Logowanie
         print(f"[LOG DB] Transakcja '{func.__name__}' wykonana w {execution_time:.4f} sekundy.")
         return result
     return wrapper

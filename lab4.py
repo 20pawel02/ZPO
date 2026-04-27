@@ -59,28 +59,25 @@ from abc import ABC, abstractmethod
 
 class PayPal:
     def send_payment(self, amount: float) -> str:
-        return f"PayPal: Przetworzono płatność na kwotę {amount} PLN."
+        return f"PayPal: processing payment {amount}"
 
 
 class Stripe:
     def make_transaction(self, total: float) -> str:
-        return f"Stripe: Transakcja zakończona sukcesem. Suma: {total} PLN."
+        return f"Stripe: transaction success {total}"
 
 
-# 2. Nasz uniwersalny interfejs w aplikacji (Target)
 class PaymentProcessor(ABC):
     @abstractmethod
     def pay(self, amount: float) -> str:
         pass
 
 
-# 3. Adaptery dla każdego z systemów
 class PayPalAdapter(PaymentProcessor):
     def __init__(self, paypal: PayPal) -> None:
         self.paypal = paypal
 
     def pay(self, amount: float) -> str:
-        # Tłumaczymy 'pay' na 'send_payment'
         return self.paypal.send_payment(amount)
 
 
@@ -89,18 +86,17 @@ class StripeAdapter(PaymentProcessor):
         self.stripe = stripe
 
     def pay(self, amount: float) -> str:
-        # Tłumaczymy 'pay' na 'make_transaction'
         return self.stripe.make_transaction(amount)
 
 
 if __name__ == '__main__':
     old_printer = OldSystem()
     adapter = PrintAdapter(old_printer)
-    print("Zadanie 1:", adapter.print_new())
+    print("zad 1:", adapter.print_new())
 
     f_sensor = FahrenheitSensor()
     c_adapter = CelsiusAdapter(f_sensor)
-    print("Zadanie 2: Odczyt z czujnika to", c_adapter.get_temperature_c(), " C")
+    print("zad 2:", c_adapter.get_temperature_c())
 
     paypal_api = PayPal()
     stripe_api = Stripe()
@@ -110,6 +106,6 @@ if __name__ == '__main__':
         StripeAdapter(stripe_api)
     ]
 
-    print("\nZadanie 3:")
+    print("\nzad 3:")
     for method in payment_methods:
         print(method.pay(150.00))
