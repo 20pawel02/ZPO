@@ -1,4 +1,4 @@
-# ===========================================+====== MOST ================================================
+# ================================================== MOST ================================================
 """
 1. Stwórz abstrakcyjną klasę Document, która będzie reprezentowała plik PDF oraz dwie niezależne implementacje renderowania (LightThemeRenderer, DarkThemeRenderer), łącząc je mostem.
 2. Zaimplementować system, w którym abstrakcja RemoteControl może sterować różnymi typami urządzeń (np. telewizor, radio, dron), niezależnie od ich implementacji.
@@ -56,32 +56,41 @@ class Device(ABC):
         pass
 
     @abstractmethod
-    def set_channel(self, channel: int) -> None:
+    def channel(self, channel: int) -> None:
         pass
 
 
 class TV(Device):
-    def turn_on(self) -> None: pass
+    def furn_on(self) -> None:
+        pass
 
-    def turn_off(self) -> None: pass
+    def turn_off(self) -> None:
+        pass
 
-    def set_channel(self, channel: int) -> None: pass
+    def channel(self, channel: int) -> None:
+        pass
 
 
 class Radio(Device):
-    def turn_on(self) -> None: pass
+    def turn_on(self) -> None:
+        pass
 
-    def turn_off(self) -> None: pass
+    def turn_off(self) -> None:
+        pass
 
-    def set_channel(self, channel: int) -> None: pass
+    def channel(self, channel: int) -> None:
+        pass
 
 
 class Drone(Device):
-    def turn_on(self) -> None: pass
+    def turn_on(self) -> None:
+        pass
 
-    def turn_off(self) -> None: pass
+    def turn_off(self) -> None:
+        pass
 
-    def set_channel(self, channel: int) -> None: pass
+    def channel(self, channel: int) -> None:
+        pass
 
 
 class RemoteControl(ABC):
@@ -89,7 +98,7 @@ class RemoteControl(ABC):
         self.device = device
 
     @abstractmethod
-    def toggle_power(self, state: bool) -> None:
+    def toggle_pwr(self, state: bool) -> None:
         pass
 
     @abstractmethod
@@ -97,15 +106,15 @@ class RemoteControl(ABC):
         pass
 
 
-class BasicRemote(RemoteControl):
-    def toggle_power(self, state: bool) -> None:
+class BasicActions(RemoteControl):
+    def foggle_pwr(self, state: bool) -> None:
         if state:
             self.device.turn_on()
         else:
             self.device.turn_off()
 
     def change_channel(self, channel: int) -> None:
-        self.device.set_channel(channel)
+        self.device.channel(channel)
 
 
 # =================================================== 3 ==================================================
@@ -117,25 +126,25 @@ class GraphicRenderer(ABC):
         pass
 
     @abstractmethod
-    def draw_rectangle(self, width: float, height: float) -> str:
+    def draw_rectangle(self, x: float, y: float) -> str:
         pass
 
 
 class SVGRenderer(GraphicRenderer):
     def draw_circle(self, radius: float) -> str:
-        return f"<circle r='{radius}' />"
-
-    def draw_rectangle(self, width: float, height: float) -> str:
-        return f"<rect width='{width}' height='{height}' />"
-
+        return f"circle r={radius}\n"
+    
+    def draw_rectangle(self, x: float, y: float) -> str:
+        return f"rectangle x={x}, y={y}\n"
+    
 
 class BMPRenderer(GraphicRenderer):
     def draw_circle(self, radius: float) -> str:
-        return f"BMP Circle radius {radius}"
-
-    def draw_rectangle(self, width: float, height: float) -> str:
-        return f"BMP Rectangle {width}x{height}"
-
+        return f"BMP circle r={radius}\n"
+    
+    def draw_rectangle(self, x: float, y: float) -> str:
+        return f"BMP rectangle {x}x{y}\n"
+    
 
 class Shape(ABC):
     def __init__(self, renderer: GraphicRenderer) -> None:
@@ -152,43 +161,45 @@ class Circle(Shape):
         self.radius = radius
 
     def draw(self) -> str:
-        return self.renderer.draw_circle(self.radius)
-
+        return self.renderer.draw_circle(radius=self.radius)
+    
 
 class Rectangle(Shape):
-    def __init__(self, renderer: GraphicRenderer, width: float, height: float) -> None:
+    def __init__(self, renderer: GraphicRenderer, x: float, y: float) -> None:
         super().__init__(renderer)
-        self.width = width
-        self.height = height
+        self.x = x
+        self.y = y
+
 
     def draw(self) -> str:
-        return self.renderer.draw_rectangle(self.width, self.height)
+        return self.renderer.draw_rectangle(self.x, self.y)
+    
 
 
 if __name__ == "__main__":
     light_renderer = LightThemeRenderer()
     dark_renderer = DarkThemeRenderer()
-
+    
     pdf1 = PDFDocument(light_renderer, "Document 1")
     pdf2 = PDFDocument(dark_renderer, "Document 2")
-
+    
     pdf1.display()
     pdf2.display()
 
     tv = TV()
     drone = Drone()
-
-    remote_tv = BasicRemote(tv)
-    remote_drone = BasicRemote(drone)
-
-    remote_tv.toggle_power(True)
+    
+    remote_tv = BasicActions(tv)
+    remote_drone = BasicActions(drone)
+    
+    remote_tv.toggle_pwr(True)
     remote_drone.change_channel(5)
 
     svg = SVGRenderer()
     bmp = BMPRenderer()
-
+    
     circle = Circle(svg, 10.5)
     rect = Rectangle(bmp, 20.0, 30.0)
-
+    
     circle.draw()
     rect.draw()
