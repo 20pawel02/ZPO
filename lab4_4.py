@@ -133,18 +133,18 @@ class GraphicRenderer(ABC):
 class SVGRenderer(GraphicRenderer):
     def draw_circle(self, radius: float) -> str:
         return f"circle r={radius}\n"
-    
+
     def draw_rectangle(self, x: float, y: float) -> str:
         return f"rectangle x={x}, y={y}\n"
-    
+
 
 class BMPRenderer(GraphicRenderer):
     def draw_circle(self, radius: float) -> str:
         return f"BMP circle r={radius}\n"
-    
+
     def draw_rectangle(self, x: float, y: float) -> str:
         return f"BMP rectangle {x}x{y}\n"
-    
+
 
 class Shape(ABC):
     def __init__(self, renderer: GraphicRenderer) -> None:
@@ -162,7 +162,7 @@ class Circle(Shape):
 
     def draw(self) -> str:
         return self.renderer.draw_circle(radius=self.radius)
-    
+
 
 class Rectangle(Shape):
     def __init__(self, renderer: GraphicRenderer, x: float, y: float) -> None:
@@ -170,36 +170,34 @@ class Rectangle(Shape):
         self.x = x
         self.y = y
 
-
     def draw(self) -> str:
         return self.renderer.draw_rectangle(self.x, self.y)
-    
 
 
 if __name__ == "__main__":
     light_renderer = LightThemeRenderer()
     dark_renderer = DarkThemeRenderer()
-    
+
     pdf1 = PDFDocument(light_renderer, "Document 1")
     pdf2 = PDFDocument(dark_renderer, "Document 2")
-    
+
     pdf1.display()
     pdf2.display()
 
     tv = TV()
     drone = Drone()
-    
+
     remote_tv = BasicActions(tv)
     remote_drone = BasicActions(drone)
-    
+
     remote_tv.toggle_pwr(True)
     remote_drone.change_channel(5)
 
     svg = SVGRenderer()
     bmp = BMPRenderer()
-    
+
     circle = Circle(svg, 10.5)
     rect = Rectangle(bmp, 20.0, 30.0)
-    
+
     circle.draw()
     rect.draw()
