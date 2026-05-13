@@ -10,10 +10,12 @@
 
 from abc import ABC, abstractmethod
 
+
 class CurrencyObserver(ABC):
     @abstractmethod
     def update(self, currency: str, rate: float) -> None:
         pass
+
 
 class UserSubscriber(CurrencyObserver):
     def __init__(self, name: str, target_currency: str) -> None:
@@ -23,6 +25,7 @@ class UserSubscriber(CurrencyObserver):
     def update(self, currency: str, rate: float) -> None:
         if currency == self.target_currency:
             print(f"[{self.name}] | kurs: {currency} rate:{rate}")
+
 
 class CurrencyMonitor:
     def __init__(self) -> None:
@@ -41,7 +44,4 @@ class CurrencyMonitor:
 # ====================================================== 2 ======================================================
 
 
-
 # ====================================================== 3 ======================================================
-
-

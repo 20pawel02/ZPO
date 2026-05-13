@@ -13,14 +13,15 @@ wartości gdy wartość w mianowniku wyniesie wartość przekazaną jako paramet
 
 from typing import Generator
 
+
 class ReserveIterator:
     def __init__(self, data: list) -> None:
         self.data = data
-        self. index = len(data) - 1
+        self.index = len(data) - 1
 
     def __iter__(self):
         return self
-    
+
     def __next__(self):
         if self.index >= 0:
             item = self.data[self.index]
@@ -28,12 +29,14 @@ class ReserveIterator:
             return item
         raise StopIteration
 
+
 # ====================================================== 2 ======================================================
 
 class Order:
     def __init__(self, order_id: int, status: str) -> None:
         self.order_id = order_id
         self.status = status
+
 
 class OrderStatusIterator:
     def __init__(self, orders: list[Order], target_status: str) -> None:
@@ -43,7 +46,7 @@ class OrderStatusIterator:
 
     def __iter__(self):
         return self
-    
+
     def __next__(self) -> Order:
         while self.index < len(self.orders):
             order = self.orders[self.index]
@@ -51,7 +54,8 @@ class OrderStatusIterator:
             if order.status == self.target_status:
                 return order
         raise StopIteration
-    
+
+
 class OrderSystem:
     def __init__(self) -> None:
         self.orders: list[Order] = []
@@ -61,7 +65,7 @@ class OrderSystem:
 
     def get_by_status(self, status: str) -> OrderStatusIterator:
         return OrderStatusIterator(self.orders, status)
-            
+
 
 # ====================================================== 3 ======================================================
 
