@@ -1,0 +1,25 @@
+{
+  "products": [
+    {
+      "name": "pomidory",
+      "unit": "kg",
+      "min_quantity": 2.0,
+      "quantity": 5.0,
+      "expiry_date": "25-06-2026"
+    },
+    {
+      "name": "cukier-bialy",
+      "unit": "kg",
+      "min_quantity": 15.0,
+      "quantity": 5.0,
+      "expiry_date": "16-09-2027"
+    },
+    {
+      "name": "pizza-mrozona",
+      "unit": "szt",
+      "min_quantity": 6.0,
+      "quantity": 20.0,
+      "expiry_date": "07-06-2026"
+    }
+  ]
+}
