@@ -1,0 +1,9 @@
+[
+  {
+    "nazwa": "jajka",
+    "ilosc": 5.0,
+    "jednostka": "szt",
+    "data_waznosci": null,
+    "minimum": 0.0
+  }
+]

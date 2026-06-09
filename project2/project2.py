@@ -1,8 +1,3 @@
-"""
-Spiżarnia - Aplikacja do zarządzania domowymi zapasami spożywczymi
-Wymagania: pip install typer rich
-"""
-
 import json
 import typer
 from datetime import date, datetime, timedelta
@@ -23,7 +18,7 @@ WARNING_DAYS = 3          # ostrzeżenie X dni przed ważnością
 
 app = typer.Typer(
     name="spiżarnia",
-    help="🏠 Zarządzanie domowymi zapasami spożywczymi",
+    help="Zarządzanie domowymi zapasami spożywczymi",
     add_completion=False,
 )
 console = Console()
@@ -45,10 +40,12 @@ class Produkt:
     ):
         self.nazwa = nazwa
         self.ilosc = ilosc
-        self.jednostka = jednostka
+        self.jednostka = jednostka           # kg / szt
         self.data_waznosci = data_waznosci   # format YYYY-MM-DD lub None
         self.minimum = minimum               # minimalna ilość na stanie
 
+
+    # zmienna zeby mozna bylo zapisac objekt Product do pliku JSON
     def to_dict(self) -> dict:
         return {
             "nazwa": self.nazwa,
@@ -58,6 +55,7 @@ class Produkt:
             "minimum": self.minimum,
         }
 
+    # wczytuje z JSON i tworzy obiekt Product
     @classmethod
     def from_dict(cls, d: dict) -> "Produkt":
         return cls(
@@ -68,12 +66,14 @@ class Produkt:
             minimum=d.get("minimum", 0.0),
         )
 
+    # oblicza ile dni zostalo do terminu waznosci
     def dni_do_waznosci(self) -> Optional[int]:
         if self.data_waznosci is None:
             return None
         delta = datetime.strptime(self.data_waznosci, "%Y-%m-%d").date() - date.today()
         return delta.days
 
+    # sprawdza czy produkt potrzebuje uzupelnienia
     def wymaga_uzupelnienia(self) -> bool:
         return self.minimum > 0 and self.ilosc < self.minimum
 
@@ -91,29 +91,34 @@ class Spizarnia:
 
     # ── persystencja ──────────────────────────
 
+    # wczytuje dane z pliku spizarnia.json i tworzy liste obiektow 
     def _wczytaj(self) -> None:
         if self.plik.exists():
             with open(self.plik, "r", encoding="utf-8") as f:
                 dane = json.load(f)
             self.produkty = [Produkt.from_dict(p) for p in dane]
 
+    # zapisuje aktualny stan wszystkich produktow do pliku json
     def zapisz(self) -> None:
         with open(self.plik, "w", encoding="utf-8") as f:
             json.dump([p.to_dict() for p in self.produkty], f, ensure_ascii=False, indent=2)
 
     # ── operacje CRUD ─────────────────────────
 
+    # przeszukuje liste produktow po nazwie zwraca obiekt Product
     def znajdz(self, nazwa: str) -> Optional[Produkt]:
         return next((p for p in self.produkty if p.nazwa.lower() == nazwa.lower()), None)
 
+    # dodaje nowy obiekt do listy
     def dodaj(self, produkt: Produkt) -> bool:
         """Zwraca False, jeśli produkt o tej nazwie już istnieje."""
         if self.znajdz(produkt.nazwa):
             return False
-        self.produkty.append(produkt)
-        self.zapisz()
+        self.produkty.append(produkt) # tutaj dodaje 
+        self.zapisz() # tu zapisuje liste
         return True
 
+    # aktualizuje wybrane pola
     def aktualizuj(
         self,
         nazwa: str,
@@ -122,6 +127,7 @@ class Spizarnia:
         data_waznosci: Optional[str] = None,
         minimum: Optional[float] = None,
     ) -> bool:
+        # jezeli pole niezniemione to pozostawia je bez zmian
         p = self.znajdz(nazwa)
         if p is None:
             return False
@@ -133,19 +139,21 @@ class Spizarnia:
             p.data_waznosci = data_waznosci
         if minimum is not None:
             p.minimum = minimum
-        self.zapisz()
+        self.zapisz() # tu zapisuje 
         return True
 
+    # usuwa produkt z listy 
     def usun(self, nazwa: str) -> bool:
         p = self.znajdz(nazwa)
         if p is None:
             return False
-        self.produkty.remove(p)
-        self.zapisz()
+        self.produkty.remove(p) # tu usuwa
+        self.zapisz() # tu zapisuje
         return True
 
     # ── monitoring ────────────────────────────
 
+    # zwraca posotowana liste produktow ktorym zostalo mniej niz 3 dni do teminu waznosci
     def krotko_wazace(self, dni: int = WARNING_DAYS) -> list[Produkt]:
         wynik = []
         for p in self.produkty:
@@ -154,6 +162,7 @@ class Spizarnia:
                 wynik.append(p)
         return sorted(wynik, key=lambda p: p.dni_do_waznosci())
 
+    # przechodzi przez wszystkie produkty i zwraca to czego brakuje w kategorii ilosc
     def lista_zakupow(self) -> list[tuple[Produkt, float]]:
         """Zwraca pary (produkt, brakująca ilość)."""
         return [
@@ -167,17 +176,18 @@ class Spizarnia:
 #  Helpery wyświetlania (Rich)
 # ─────────────────────────────────────────────
 
+# kolorki do latwiejszego patrzenia na przeterminowane produkty
 def _kolor_waznosci(dni: Optional[int]) -> str:
     if dni is None:
         return "white"
     if dni < 0:
-        return "red bold"
+        return "red bold" # przeterminowany
     if dni <= WARNING_DAYS:
-        return "yellow bold"
-    return "green"
+        return "yellow bold" # zaraz przeterminowany
+    return "green" # zdatny
 
-
-def _tabela_produktow(produkty: list[Produkt], tytul: str = "📦 Spiżarnia") -> Table:
+# buduje i zwraca ladna tabelke ze wszystkimi produktami
+def _tabela_produktow(produkty: list[Produkt], tytul: str = "Spiżarnia") -> Table:
     tabela = Table(
         title=tytul,
         box=box.ROUNDED,
@@ -200,16 +210,16 @@ def _tabela_produktow(produkty: list[Produkt], tytul: str = "📦 Spiżarnia") -
             status = Text("brak daty", style="dim")
         elif dni < 0:
             data_str = p.data_waznosci
-            status = Text(f"⛔ przeterminowany ({-dni}d)", style="red bold")
+            status = Text(f"przeterminowany ({-dni}d)", style="red bold")
         elif dni == 0:
             data_str = p.data_waznosci
-            status = Text("⚠️  dziś wygasa!", style="yellow bold")
+            status = Text("Dziś wygasa!", style="yellow bold")
         elif dni <= WARNING_DAYS:
             data_str = p.data_waznosci
-            status = Text(f"⚠️  za {dni} dni", style="yellow bold")
+            status = Text(f"Wygasa za {dni} dni", style="yellow bold")
         else:
             data_str = p.data_waznosci
-            status = Text(f"✅ za {dni} dni", style="green")
+            status = Text(f"Wygasa za {dni} dni", style="green")
 
         min_str = f"{p.minimum} {p.jednostka}" if p.minimum > 0 else "–"
         ilosc_kolor = "red" if p.wymaga_uzupelnienia() else "white"
