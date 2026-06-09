@@ -1,25 +1,37 @@
-{
-  "products": [
-    {
-      "name": "pomidory",
-      "unit": "kg",
-      "min_quantity": 2.0,
-      "quantity": 5.0,
-      "expiry_date": "25-06-2026"
-    },
-    {
-      "name": "cukier-bialy",
-      "unit": "kg",
-      "min_quantity": 15.0,
-      "quantity": 5.0,
-      "expiry_date": "16-09-2027"
-    },
-    {
-      "name": "pizza-mrozona",
-      "unit": "szt",
-      "min_quantity": 6.0,
-      "quantity": 20.0,
-      "expiry_date": "07-06-2026"
-    }
-  ]
-}
+[
+  {
+    "nazwa": "jajka",
+    "ilosc": 5.0,
+    "jednostka": "szt",
+    "data_waznosci": "2026-10-03",
+    "minimum": 5.0
+  },
+  {
+    "nazwa": "mleko",
+    "ilosc": 5.0,
+    "jednostka": "l",
+    "data_waznosci": "2026-06-10",
+    "minimum": 2.0
+  },
+  {
+    "nazwa": "ziemniaki",
+    "ilosc": 5.0,
+    "jednostka": "kg",
+    "data_waznosci": "2026-07-11",
+    "minimum": 3.0
+  },
+  {
+    "nazwa": "pomidory",
+    "ilosc": 5.0,
+    "jednostka": "szt",
+    "data_waznosci": "2026-06-01",
+    "minimum": 4.0
+  },
+  {
+    "nazwa": "ogorki",
+    "ilosc": 2.0,
+    "jednostka": "szt",
+    "data_waznosci": "2026-06-08",
+    "minimum": 4.0
+  }
+]
