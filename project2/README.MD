@@ -1,4 +1,4 @@
-# 🏠 Spiżarnia — zarządzanie domowymi zapasami
+# Spiżarnia — zarządzanie domowymi zapasami
 
 ## Wymagania
 

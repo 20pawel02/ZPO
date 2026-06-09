@@ -40,7 +40,7 @@ class Produkt:
     ):
         self.nazwa = nazwa
         self.ilosc = ilosc
-        self.jednostka = jednostka           # kg / szt
+        self.jednostka = jednostka           # kg / szt / l / itp.
         self.data_waznosci = data_waznosci   # format YYYY-MM-DD lub None
         self.minimum = minimum               # minimalna ilość na stanie
 
@@ -255,15 +255,15 @@ def cmd_dodaj(
         try:
             datetime.strptime(data_waznosci, "%Y-%m-%d")
         except ValueError:
-            console.print("[red]❌ Zły format daty. Użyj YYYY-MM-DD.[/red]")
+            console.print("[red]Zły format daty. Użyj YYYY-MM-DD.[/red]")
             raise typer.Exit(1)
 
     s = Spizarnia()
     produkt = Produkt(nazwa, ilosc, jednostka, data_waznosci, minimum)
     if s.dodaj(produkt):
-        console.print(f"[green]✅ Dodano:[/green] [bold]{nazwa}[/bold]  {ilosc} {jednostka}")
+        console.print(f"[green] Dodano:[/green] [bold]{nazwa}[/bold]  {ilosc} {jednostka}")
     else:
-        console.print(f"[yellow]⚠️  Produkt '[bold]{nazwa}[/bold]' już istnieje. Użyj 'aktualizuj'.[/yellow]")
+        console.print(f"[yellow]  Produkt '[bold]{nazwa}[/bold]' już istnieje. Użyj 'aktualizuj'.[/yellow]")
 
 
 @app.command("aktualizuj")
@@ -277,9 +277,9 @@ def cmd_aktualizuj(
     """Zaktualizuj dane istniejącego produktu."""
     s = Spizarnia()
     if s.aktualizuj(nazwa, ilosc, jednostka, data_waznosci, minimum):
-        console.print(f"[green]✅ Zaktualizowano:[/green] [bold]{nazwa}[/bold]")
+        console.print(f"[green] Zaktualizowano:[/green] [bold]{nazwa}[/bold]")
     else:
-        console.print(f"[red]❌ Nie znaleziono produktu '[bold]{nazwa}[/bold]'.[/red]")
+        console.print(f"[red] Nie znaleziono produktu '[bold]{nazwa}[/bold]'.[/red]")
 
 
 @app.command("usun")
@@ -290,7 +290,7 @@ def cmd_usun(
     """Usuń produkt ze spiżarni."""
     s = Spizarnia()
     if s.znajdz(nazwa) is None:
-        console.print(f"[red]❌ Nie znaleziono '[bold]{nazwa}[/bold]'.[/red]")
+        console.print(f"[red] Nie znaleziono '[bold]{nazwa}[/bold]'.[/red]")
         raise typer.Exit(1)
 
     if not tak:
@@ -300,7 +300,7 @@ def cmd_usun(
             raise typer.Exit()
 
     s.usun(nazwa)
-    console.print(f"[green]✅ Usunięto:[/green] [bold]{nazwa}[/bold]")
+    console.print(f"[green] Usunięto:[/green] [bold]{nazwa}[/bold]")
 
 
 @app.command("lista")
@@ -317,7 +317,7 @@ def cmd_lista(
         console.print(Panel("[dim]Spiżarnia jest pusta.[/dim]", expand=False))
         return
 
-    tytul = "⚠️  Produkty bliskie ważności" if tylko_krotkie else "📦 Spiżarnia"
+    tytul = "Produkty bliskie ważności" if tylko_krotkie else "📦 Spiżarnia"
     console.print(_tabela_produktow(produkty, tytul))
     console.print(f"[dim]Łącznie: {len(produkty)} produkt(ów)[/dim]")
 
@@ -328,7 +328,7 @@ def cmd_lista(
         console.print(
             Panel(
                 "\n".join(
-                    f"[yellow]⚠️[/yellow]  [bold]{p.nazwa}[/bold] — "
+                    f"[yellow]  [bold]{p.nazwa}[/bold] — "
                     + (
                         "[red]przeterminowany![/red]"
                         if p.dni_do_waznosci() < 0
@@ -351,13 +351,13 @@ def cmd_zakupy():
 
     if not lista:
         console.print(
-            Panel("[green]✅ Wszystkie zapasy powyżej minimum — brak potrzebnych zakupów.[/green]",
+            Panel("[green] Wszystkie zapasy powyżej minimum — brak potrzebnych zakupów.[/green]",
                   expand=False)
         )
         return
 
     tabela = Table(
-        title="🛒 Lista zakupów",
+        title="Lista zakupów",
         box=box.ROUNDED,
         header_style="bold cyan",
         show_lines=True,
@@ -372,7 +372,7 @@ def cmd_zakupy():
             produkt.nazwa,
             f"{produkt.ilosc} {produkt.jednostka}",
             f"{produkt.minimum} {produkt.jednostka}",
-            Text(f"[bold]{brakuje} {produkt.jednostka}[/bold]", style="red"),
+            Text(f"{brakuje} {produkt.jednostka}", style="red"),
         )
 
     console.print(tabela)
@@ -390,7 +390,7 @@ def cmd_szukaj(
     if not wyniki:
         console.print(f"[yellow]Brak wyników dla '[bold]{fraza}[/bold]'.[/yellow]")
     else:
-        console.print(_tabela_produktow(wyniki, f"🔍 Wyniki dla '{fraza}'"))
+        console.print(_tabela_produktow(wyniki, f"Wyniki dla '{fraza}'"))
 
 
 # ─────────────────────────────────────────────
