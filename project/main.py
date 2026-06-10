@@ -10,9 +10,9 @@ from rich import box
 from rich.text import Text
 from rich.prompt import Confirm
 
-# ─────────────────────────────────────────────
+# =============================================
 #  Konfiguracja
-# ─────────────────────────────────────────────
+# =============================================
 DATA_FILE = Path("spizarnia.json")
 WARNING_DAYS = 3          # ostrzeżenie X dni przed ważnością
 
@@ -24,9 +24,9 @@ app = typer.Typer(
 console = Console()
 
 
-# ─────────────────────────────────────────────
+# =============================================
 #  Model danych
-# ─────────────────────────────────────────────
+# =============================================
 class Produkt:
     """Reprezentuje pojedynczy produkt w spiżarni."""
 
@@ -78,9 +78,9 @@ class Produkt:
         return self.minimum > 0 and self.ilosc < self.minimum
 
 
-# ─────────────────────────────────────────────
+# =============================================
 #  Repozytorium (zapis / odczyt JSON)
-# ─────────────────────────────────────────────
+# =============================================
 class Spizarnia:
     """Zarządza kolekcją produktów i persystencją danych."""
 
@@ -172,9 +172,9 @@ class Spizarnia:
         ]
 
 
-# ─────────────────────────────────────────────
-#  Helpery wyświetlania (Rich)
-# ─────────────────────────────────────────────
+# =============================================
+#  Helpery wyswietlania (Rich)
+# =============================================
 
 # kolorki do latwiejszego patrzenia na przeterminowane produkty
 def _kolor_waznosci(dni: Optional[int]) -> str:
@@ -236,9 +236,9 @@ def _tabela_produktow(produkty: list[Produkt], tytul: str = "Spiżarnia") -> Tab
     return tabela
 
 
-# ─────────────────────────────────────────────
+# =============================================
 #  Polecenia CLI
-# ─────────────────────────────────────────────
+# =============================================
 
 @app.command("dodaj")
 def cmd_dodaj(
@@ -393,9 +393,9 @@ def cmd_szukaj(
         console.print(_tabela_produktow(wyniki, f"Wyniki dla '{fraza}'"))
 
 
-# ─────────────────────────────────────────────
-#  Punkt wejścia
-# ─────────────────────────────────────────────
+# =============================================
+#  Punkt wejscia
+# =============================================
 
 if __name__ == "__main__":
     app()

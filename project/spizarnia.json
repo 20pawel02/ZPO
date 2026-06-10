@@ -8,7 +8,7 @@
   },
   {
     "nazwa": "mleko",
-    "ilosc": 5.0,
+    "ilosc": 10.0,
     "jednostka": "l",
     "data_waznosci": "2026-06-10",
     "minimum": 2.0
